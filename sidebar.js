@@ -75,17 +75,8 @@ chrome.runtime.onMessage.addListener(async ({ message, tools, url }, sender) => 
   executeBtn.disabled = false;
   copyToClipboard.hidden = false;
 
-  const KEYS = [
-    'description',
-    'inputSchema',
-    'readOnlyHint',
-    'untrustedContentHint',
-    'name',
-  ];
-  let keys = [...new Set(tools.flatMap((tool) => Object.keys(tool)))];
-  keys = [...keys].sort((a, b) => {
-    return KEYS.indexOf(a) - KEYS.indexOf(b);
-  });
+  const KEYS = ['description', 'inputSchema', 'readOnlyHint', 'untrustedContentHint', 'name'];
+  const keys = KEYS.filter(key => tools.some(tool => key in tool));
   keys.forEach((key) => {
     const th = document.createElement('th');
     th.textContent = key;

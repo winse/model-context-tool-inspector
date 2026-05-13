@@ -35,27 +35,15 @@ chrome.runtime.onMessage.addListener(({ action, name, inputArgs, location }, _, 
         });
       }
       // Execute the experimental tool
+      let promise;
       if ('executeTool' in navigator.modelContext) {
-        navigator.modelContext
-          .getTools()
-          .then(async (tools) => {
-            const tool = tools.find((t) => t.name === name && t.window.location.href === location);
-            let result = await navigator.modelContext.executeTool(tool, inputArgs);
-            // If result is null and we have a target frame, wait for the frame to reload.
-            if (result === null && targetFrame) {
-              console.debug(`[WebMCP] Waiting for form target ${targetFrame} to load`);
-              await loadPromise;
-              console.debug('[WebMCP] Get cross document script tool result');
-              result = targetFrame.contentWindow.document.querySelector(
-                'script[type="application/ld+json"]',
-              )?.textContent;
-            }
-            reply(result);
-          })
-          .catch(({ message }) => reply(JSON.stringify(message)));
-        return true;
+        promise = navigator.modelContext.getTools().then((tools) => {
+          const tool = tools.find((t) => t.name === name && t.window.location.href === location);
+          return navigator.modelContext.executeTool(tool, inputArgs);
+        });
+      } else {
+        promise = navigator.modelContextTesting.executeTool(name, inputArgs);
       }
-      const promise = navigator.modelContextTesting.executeTool(name, inputArgs);
       promise
         .then(async (result) => {
           // If result is null and we have a target frame, wait for the frame to reload.

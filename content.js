@@ -77,8 +77,8 @@ async function listTools() {
     tools = tools.map((tool) => {
       return {
         description: tool.description,
-        name: tool.name,
         inputSchema: tool.inputSchema,
+        name: tool.name,
         location: tool.window.location.href,
       };
     });

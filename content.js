@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-console.debug(`[WebMCP] Content script injected in ${location.href}`);
+console.debug(`[WebMCP] Content script injected in ${window.location.href}`);
 
 chrome.runtime.onMessage.addListener(({ action, name, inputArgs, location }, _, reply) => {
   try {
@@ -71,25 +71,51 @@ chrome.runtime.onMessage.addListener(({ action, name, inputArgs, location }, _, 
 });
 
 async function listTools() {
-  let tools;
+  let tools = [];
   if ('getTools' in navigator.modelContext) {
-    tools = await navigator.modelContext.getTools();
-    tools = tools.map((tool) => {
-      return {
+    for (const tool of await navigator.modelContext.getTools()) {
+      let location;
+      try {
+        location = tool.window.location.href;
+      } catch {
+        location = await getLocation(tool.window);
+      }
+      tools.push({
         description: tool.description,
         inputSchema: tool.inputSchema,
         readOnlyHint: tool.annotations?.readOnlyHint ? '✓' : undefined,
         untrustedContentHint: tool.annotations?.untrustedContentHint ? '✓' : undefined,
         name: tool.name,
-        location: tool.window.location.href,
-      };
-    });
+        location,
+      });
+    }
   } else {
     tools = navigator.modelContextTesting.listTools();
   }
   console.debug(`[WebMCP] Got ${tools.length} tools`, tools);
-  chrome.runtime.sendMessage({ tools, url: location.href });
+  chrome.runtime.sendMessage({ tools, url: window.location.href });
 }
+
+function getLocation(crossOriginIframeWindow) {
+  const promise = new Promise((resolve) => {
+    const listener = ({ data }) => {
+      if (data.action === 'GET_LOCATION_RESPONSE') {
+        window.removeEventListener('message', listener);
+        resolve(data.location);
+      }
+    };
+    window.addEventListener('message', listener);
+  });
+  crossOriginIframeWindow.postMessage({ action: 'GET_LOCATION' }, '*');
+  return promise;
+}
+
+window.addEventListener('message', ({ data, origin, source }) => {
+  if (data.action === 'GET_LOCATION') {
+    const location = window.location.href;
+    source.postMessage({ action: 'GET_LOCATION_RESPONSE', location }, origin);
+  }
+});
 
 window.addEventListener('toolactivated', ({ toolName }) => {
   console.debug(`[WebMCP] Tool "${toolName}" started execution.`);

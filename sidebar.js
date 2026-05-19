@@ -27,7 +27,7 @@ const advancedSection = document.getElementById('advancedSection');
 (async () => {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    await chrome.tabs.sendMessage(tab.id, { action: 'LIST_TOOLS' });
+    await chrome.tabs.sendMessage(tab.id, { action: 'LIST_TOOLS' }, { frameId: 0 });
   } catch (error) {
     const statusDiv = document.getElementById('status');
     statusDiv.textContent = error;
@@ -43,7 +43,7 @@ let lastSuggestedUserPrompt = '';
 
 // Listen for the results coming back from content.js
 chrome.runtime.onMessage.addListener(async ({ message, tools, url }, sender) => {
-  if (sender.frameId !== 0) return;
+  if (sender.frameId && sender.frameId !== 0) return;
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (sender.tab && sender.tab.id !== tab.id) return;
@@ -77,7 +77,7 @@ chrome.runtime.onMessage.addListener(async ({ message, tools, url }, sender) => 
   copyToClipboard.hidden = false;
 
   const KEYS = ['description', 'inputSchema', 'readOnlyHint', 'untrustedContentHint', 'name'];
-  const keys = KEYS.filter(key => tools.some(tool => key in tool));
+  const keys = KEYS.filter((key) => tools.some((tool) => key in tool));
   keys.forEach((key) => {
     const th = document.createElement('th');
     th.textContent = key;

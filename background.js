@@ -28,7 +28,7 @@ async function updateBadge(tabId) {
   if (tab.id !== tabId) return;
   chrome.action.setBadgeText({ text: '', tabId });
   chrome.action.setBadgeBackgroundColor({ color: '#2563eb' });
-  chrome.tabs.sendMessage(tabId, { action: 'LIST_TOOLS' }).catch(({ message }) => {
+  chrome.tabs.sendMessage(tabId, { action: 'LIST_TOOLS' }, { frameId: 0 }).catch(({ message }) => {
     chrome.runtime.sendMessage({ message });
   });
 }

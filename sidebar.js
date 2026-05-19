@@ -23,7 +23,7 @@ const apiKeyBtn = document.getElementById('apiKeyBtn');
 const promptResults = document.getElementById('promptResults');
 const advancedSection = document.getElementById('advancedSection');
 
-// Inject content script first.
+// First, request list of tools from content script living in top-level frame.
 (async () => {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });

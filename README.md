@@ -4,7 +4,7 @@ A Chrome Extension that allows developers to inspect, monitor, and execute tools
 
 ## Prerequisites
 
-**Important:** This extension relies on the experimental `navigator.modelContextTesting` Web API. You must enable the "WebMCP for testing" flag in `chrome://flags` to turn it on in Chrome 146.0.7672.0 or higher.
+**Important:** This extension relies on the experimental `navigator.modelContextTesting` Web API. You must enable the "WebMCP for testing" flag in `chrome://flags` to turn it on in Chrome 148.0.7778.56 or higher.
 
 ## Installation
 

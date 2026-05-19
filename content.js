@@ -16,11 +16,7 @@ chrome.runtime.onMessage.addListener(({ action, name, inputArgs, location }, _, 
         navigator.modelContext.addEventListener('toolchange', listTools);
         return;
       }
-      if ('ontoolchange' in navigator.modelContextTesting) {
-        navigator.modelContextTesting.addEventListener('toolchange', listTools);
-        return;
-      }
-      navigator.modelContextTesting.registerToolsChangedCallback(listTools);
+      navigator.modelContextTesting.addEventListener('toolchange', listTools);
     }
     if (action == 'EXECUTE_TOOL') {
       if (location && location !== window.location.href) return;

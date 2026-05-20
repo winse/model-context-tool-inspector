@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener(({ action, name, inputArgs, location }, _, 
       let promise;
       if ('executeTool' in navigator.modelContext) {
         promise = navigator.modelContext.getTools().then((tools) => {
-          const tool = tools.find((t) => t.name === name && t.window.location.href === location);
+          const tool = tools.find((t) => t.name === name && t.window === window);
           return navigator.modelContext.executeTool(tool, inputArgs);
         });
       } else {

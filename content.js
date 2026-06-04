@@ -9,7 +9,7 @@ const modelContext = document.modelContext || navigator.modelContext;
 
 chrome.runtime.onMessage.addListener(({ action, name, inputArgs, location }, _, reply) => {
   try {
-    if (!navigator.modelContextTesting) {
+    if (!navigator.modelContextTesting && !modelContext) {
       throw new Error('Error: You must run Chrome with the "WebMCP for testing" flag enabled.');
     }
     if (action == 'LIST_TOOLS') {

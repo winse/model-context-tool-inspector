@@ -46,9 +46,10 @@ button:hover {
   padding: 0 4px;
   border-radius: 4px;
   white-space: pre-line;
-  max-height: 200px;
-  overflow-y: scroll;
+  max-height: 400px;
+  overflow-y: auto;
   margin-bottom: 20px;
+  resize:vertical
 }
 
 #status {
@@ -407,8 +408,7 @@ dialog::backdrop {
 
   #promptResults,
   #toolResults {
-    background: #000;
-    border: 1px solid #333;
+    background-color: #232323;
   }
 
   #status {

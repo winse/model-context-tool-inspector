@@ -31,43 +31,163 @@
       </div>
       </div>
 
+      <h2 class="collapsible-header">LLM Settings</h2>
+      <div class="section-content cursor-settings">
+        <h3 class="cursor-settings-heading">Models</h3>
+
+        <div class="cursor-models-card">
+          <div class="cursor-search-row">
+            <input
+              id="modelSearchInput"
+              type="text"
+              class="cursor-search-input"
+              placeholder="Add or search model"
+              autocomplete="off"
+            />
+            <button id="modelRefreshBtn" type="button" class="cursor-icon-btn" title="Refresh models" aria-label="Refresh models">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 4v6h-6M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+            </button>
+            <button
+              id="clearAllModelsBtn"
+              type="button"
+              class="cursor-icon-btn cursor-icon-btn-danger"
+              title="Clear all models"
+              aria-label="Clear all models"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18"/>
+                <path d="M8 6V4h8v2"/>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                <path d="M10 11v6"/>
+                <path d="M14 11v6"/>
+              </svg>
+            </button>
+          </div>
+
+          <div id="modelList" class="cursor-model-list"></div>
+
+          <button id="viewAllModelsBtn" type="button" class="cursor-link-btn cursor-view-all is-hidden">View All Models</button>
+
+          <button id="addCustomModelBtn" type="button" class="cursor-link-btn">+ Add Custom Model</button>
+
+          <div id="addModelForm" class="cursor-add-form is-hidden">
+            <input id="newModelInput" type="text" class="cursor-add-input" placeholder="Enter model name" autocomplete="off" />
+            <div class="cursor-add-actions">
+              <button id="addModelBtn" type="button" class="cursor-text-btn">Add</button>
+              <button id="cancelModelBtn" type="button" class="cursor-text-btn muted">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <button id="apiKeysToggle" type="button" class="cursor-collapse-toggle collapsed" aria-expanded="false">
+          <span class="cursor-chevron" aria-hidden="true"></span>
+          <span>API Keys</span>
+        </button>
+        <div id="apiKeysSection" class="cursor-api-keys is-hidden">
+          <div class="cursor-api-block">
+            <div class="cursor-api-header">
+              <span class="cursor-api-title">OpenAI API Key</span>
+              <label class="cursor-toggle">
+                <input id="openaiKeyEnabled" type="checkbox" />
+                <span class="cursor-toggle-track"></span>
+              </label>
+            </div>
+            <p class="cursor-api-desc">
+              You can put in
+              <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">your OpenAI key</a>
+              to use OpenAI models at cost.
+            </p>
+            <input id="openaiApiKey" type="password" class="cursor-field-input" placeholder="Enter your OpenAI API Key" autocomplete="off" />
+          </div>
+
+          <div class="cursor-api-nested">
+            <div class="cursor-api-header">
+              <span class="cursor-api-title">Override OpenAI Base URL</span>
+              <label class="cursor-toggle">
+                <input id="baseUrlEnabled" type="checkbox" />
+                <span class="cursor-toggle-track"></span>
+              </label>
+            </div>
+            <p class="cursor-api-desc">Change the base URL for OpenAI API requests.</p>
+            <input id="openaiBaseUrl" type="url" class="cursor-field-input" placeholder="https://api.openai.com/v1" />
+          </div>
+
+          <div class="cursor-api-block">
+            <div class="cursor-api-header">
+              <span class="cursor-api-title">Anthropic API Key</span>
+              <label class="cursor-toggle">
+                <input id="anthropicKeyEnabled" type="checkbox" />
+                <span class="cursor-toggle-track"></span>
+              </label>
+            </div>
+            <p class="cursor-api-desc">
+              You can put in
+              <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">your Anthropic key</a>
+              to use Claude at cost. When this key is enabled, chat requests use the Anthropic API.
+            </p>
+            <input id="anthropicApiKey" type="password" class="cursor-field-input" placeholder="Enter your Anthropic API Key" autocomplete="off" />
+          </div>
+
+          <div class="cursor-api-nested">
+            <div class="cursor-api-header">
+              <span class="cursor-api-title">Override Anthropic Base URL</span>
+              <label class="cursor-toggle">
+                <input id="anthropicBaseUrlEnabled" type="checkbox" />
+                <span class="cursor-toggle-track"></span>
+              </label>
+            </div>
+            <p class="cursor-api-desc">Change the base URL for Anthropic API requests.</p>
+            <input id="anthropicBaseUrl" type="url" class="cursor-field-input" placeholder="https://api.anthropic.com" />
+          </div>
+        </div>
+
+        <label class="cursor-checkbox-row">
+          <input id="suggestUserPromptCheckbox" type="checkbox" />
+          <span>Suggest user prompt from discovered tools</span>
+        </label>
+      </div>
+
       <h2 class="collapsible-header">Interact with the Page</h2>
       <div class="section-content">
 
       <div class="form-group">
-        <div class="label-with-button">
-          <label for="userPromptText">User Prompt</label>
-          <button id="advancedBtn" title="Advanced features" popovertarget="advancedSection" class="icon-btn">︙</button>
-        </div>
+        <label for="userPromptText">User Prompt</label>
         <textarea id="userPromptText"></textarea>
       </div>
 
-      <dialog id="advancedSection" popover autofocus>
-        <div class="menu-label">Gemini Model</div>
-        <label class="model-option">
-          <input type="radio" name="model" value="gemini-3-flash-preview">
-          <span>Gemini 3 Flash Preview</span>
-        </label>
-        <label class="model-option">
-          <input type="radio" name="model" value="gemini-3.1-flash-lite">
-          <span>Gemini 3.1 Flash-Lite</span>
-        </label>
-        <label class="model-option">
-          <input type="radio" name="model" value="gemini-3.5-flash">
-          <span>Gemini 3.5 Flash</span>
-        </label>
-        <div class="menu-label">Advanced Options</div>
-        <label class="model-option">
-          <input type="checkbox" id="suggestUserPromptCheckbox">
-          <span>Suggest user prompt</span>
-        </label>
-      </dialog>
-
-      <div class="form-group">
-        <button id="promptBtn" disabled>Send</button>
-        <button id="resetBtn" class="secondary" disabled>Reset</button>
-        <button id="apiKeyBtn" class="secondary">Set Gemini API key</button>
-        <button id="traceBtn" class="secondary">Copy trace</button>
+      <div class="form-group prompt-actions">
+        <div id="modelPicker" class="model-picker">
+          <button
+            id="modelPickerTrigger"
+            type="button"
+            class="model-picker-trigger"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            disabled
+          >
+            <span id="modelPickerLabel" class="model-picker-label">No model</span>
+            <span class="model-picker-chevron" aria-hidden="true"></span>
+          </button>
+          <div id="modelPickerMenu" class="model-picker-menu is-hidden" role="listbox">
+            <input
+              id="modelPickerSearch"
+              type="text"
+              class="model-picker-search"
+              placeholder="Search models"
+              autocomplete="off"
+            />
+            <div id="modelPickerList" class="model-picker-list"></div>
+            <button id="modelPickerAddLink" type="button" class="model-picker-footer">Add Models</button>
+          </div>
+        </div>
+        <div class="prompt-buttons">
+          <button id="promptBtn" disabled>Send</button>
+          <button id="resetBtn" class="secondary" disabled>Reset</button>
+          <button id="traceBtn" class="secondary">Copy trace</button>
+        </div>
       </div>
 
       <pre id="promptResults"></pre>
